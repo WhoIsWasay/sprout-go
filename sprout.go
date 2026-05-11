@@ -119,7 +119,7 @@ type WebhookData struct {
 }
 
 
-func (cli *Client) WebhookReader(secret string, r *http.Request) (*WebhookPayload, error) {
+func WebhookReader(secret string, r *http.Request) (*WebhookPayload, error) {
     body, _ := io.ReadAll(r.Body)
 
     // Verify signature
@@ -141,7 +141,7 @@ func (cli *Client) WebhookReader(secret string, r *http.Request) (*WebhookPayloa
 }
 
 
-func (cli *Client) WebhookReaderGin(secret string, c *gin.Context) (*WebhookPayload, error) {
+func WebhookReaderGin(secret string, c *gin.Context) (*WebhookPayload, error) {
     body, _ := io.ReadAll(c.Request.Body)
 
     mac := hmac.New(sha256.New, []byte(secret))
