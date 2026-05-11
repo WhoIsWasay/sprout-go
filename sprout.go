@@ -2,11 +2,15 @@ package sprout
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"time"
+	"github.com/gin-gonic/gin"
 )
 
 type Client struct {
@@ -45,9 +49,11 @@ type OrderRequest struct {
 	Customer CustomerData `json:"customer-data"`
 }
 
+
+//Creates Order Request and send it to /ordercreation and send back reply to the caller
 func (cli *Client) CreateOrder(or OrderRequest) (*OrderResponse, error) {
 
-	// 1. Prepare your JSON body
+	// 1. Prepares your JSON body
 	jsonBody, err := json.Marshal(or)
 	if err != nil {
 		return nil, err
@@ -94,5 +100,63 @@ func (cli *Client) CreateOrder(or OrderRequest) (*OrderResponse, error) {
 
 	// RETURN the result back to the caller
 	return &orderResponse, nil
+}
 
+type WebhookPayload struct {
+	Event     string      `json:"event"`
+	Timestamp string      `json:"timestamp"`
+	Data      WebhookData `json:"data"`
+}
+
+type WebhookData struct {
+	Order_id        string `json:"order_id"`
+	Merchant_id     string `json:"merchant_id"` 
+	Amount          string `json:"amount"`
+	Currency        string `json:"currency"`
+	Customer_email  string `json:"customer_email"`
+	Idempotency_key string `json:"idempotency_key"`
+	Mode            string `json:"mode"`
+}
+
+
+func (cli *Client) WebhookReader(secret string, r *http.Request) (*WebhookPayload, error) {
+    body, _ := io.ReadAll(r.Body)
+
+    // Verify signature
+    mac := hmac.New(sha256.New, []byte(secret))
+    mac.Write(body)
+    expected := hex.EncodeToString(mac.Sum(nil))
+    received := r.Header.Get("X-Sprout-Signature")
+
+    if !hmac.Equal([]byte(expected), []byte(received)) {
+        return nil, fmt.Errorf("invalid signature")
+    }
+
+    var payload WebhookPayload
+    if err := json.Unmarshal(body, &payload); err != nil {
+        return nil, err
+    }
+
+    return &payload, nil
+}
+
+
+func (cli *Client) WebhookReaderGin(secret string, c *gin.Context) (*WebhookPayload, error) {
+    body, _ := io.ReadAll(c.Request.Body)
+
+    mac := hmac.New(sha256.New, []byte(secret))
+    mac.Write(body)
+    expected := hex.EncodeToString(mac.Sum(nil))
+    received := c.GetHeader("X-Sprout-Signature")
+
+    if !hmac.Equal([]byte(expected), []byte(received)) {
+        return nil, fmt.Errorf("invalid signature")
+    }
+
+    var payload WebhookPayload
+    if err := json.Unmarshal(body, &payload); err != nil {
+        return nil, err
+    }
+
+    return &payload, nil
 }
