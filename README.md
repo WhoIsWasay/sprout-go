@@ -7,7 +7,7 @@ A Go client library for integrating with the Sprout API. This SDK provides simpl
 To install the package, run the following command in your terminal:
 
 ```bash
-go get github.com/WhoIsWasay/sprout
+go get github.com/WhoIsWasay/sprout-go
 ```
 
 # Quick Start
@@ -78,24 +78,6 @@ This SDK provides built-in methods to <b>automatically verify the HMAC SHA-256  
 
 ### Option A: Standard `net/http` Webhook
 
-If you are using Go's standard `net/http` package, use `WebhookReader`:
-
-```bash
-package main
-
-import (
-	"fmt"
-	"github.com/WhoIsWasay/sprout-go"
-)
-
-func main() {
-	// Initialize a new Sprout client
-	client := sprout.NewClient("your_secret_key_here")
-}
-
-```
-
-### 2. Create an Order
 You can create an order by passing an OrderRequest struct to the CreateOrder method. The SDK handles the JSON marshaling, setting the appropriate headers, and parsing the response.
 
 ```bash
