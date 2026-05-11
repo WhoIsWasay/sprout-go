@@ -78,7 +78,8 @@ This SDK provides built-in methods to <b>automatically verify the HMAC SHA-256  
 
 ### Option A: Standard `net/http` Webhook
 
-You can create an order by passing an OrderRequest struct to the CreateOrder method. The SDK handles the JSON marshaling, setting the appropriate headers, and parsing the response.
+"If you are using Go's standard `net/http` package, use `WebhookReader`:
+
 
 ```bash
 package main
