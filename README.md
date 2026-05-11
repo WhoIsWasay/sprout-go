@@ -20,7 +20,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/WhoIsWasay/sprout"
+	"github.com/WhoIsWasay/sprout-go"
 )
 
 func main() {
@@ -39,7 +39,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"github.com/WhoIsWasay/sprout"
+	"github.com/WhoIsWasay/sprout-go"
 )
 
 func main() {
@@ -85,7 +85,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/WhoIsWasay/sprout"
+	"github.com/WhoIsWasay/sprout-go"
 )
 
 func main() {
@@ -104,7 +104,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"github.com/WhoIsWasay/sprout"
+	"github.com/WhoIsWasay/sprout-go"
 )
 
 func handleSproutWebhook(w http.ResponseWriter, r *http.Request) {
@@ -136,7 +136,7 @@ package main
 import (
 	"net/http"
     "github.com/gin-gonic/gin"
-    "github.com/WhoIsWasay/sprout"
+    "github.com/WhoIsWasay/sprout-go"
 )
 
 func main() {
