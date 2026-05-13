@@ -78,7 +78,7 @@ This SDK provides built-in methods to <b>automatically verify the HMAC SHA-256  
 
 ### Option A: Standard `net/http` Webhook
 
-"If you are using Go's standard `net/http` package, use `WebhookReader`:
+If you are using Go's standard `net/http` package, use `WebhookReader`:
 
 
 ```bash
